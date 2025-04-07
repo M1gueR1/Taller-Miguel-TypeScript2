@@ -4,45 +4,46 @@ import { series } from './data.js';
 let totalSeasons = 0;
 let seriesTbody: HTMLElement = document.getElementById('series')!;
 const promedioDiv: HTMLElement = document.getElementById('promedio')!;
-const detalleContainer: HTMLElement = document.getElementById('detalles')!;
-
-renderSeriesInTable(series);
 
 
+actualizandoTablas(series);
 
-function renderSeriesInTable(series: Serie[]): void {
-    console.log('Desplegando series');
-    series.forEach((serie) => {
-      let trElement = document.createElement("tr");
-      trElement.innerHTML = `<td>${serie.position}</td>
-                             <td><a href="#" class="serie-link" data-id="${serie.position}">${serie.name}</a></td>
-                             <td>${serie.channel}</td>
-                             <td>${serie.amountOfSeasons}</td>`;
-      seriesTbody.appendChild(trElement);
-    });
-    document.querySelectorAll('.serie-link').forEach(link => 
-      {
-        link.addEventListener('click', (e) => 
-        {
-          e.preventDefault();
-          const id = Number((e.target as HTMLElement).getAttribute('data-id'));
-          let selectedSerie: Serie;
-          
-          for (let i = 0; i < series.length; i++) 
-          {
-            if (series[i].position === id) 
-            {
-              selectedSerie = series[i];
-              showSerieDetail(selectedSerie);
-              break;
-            }
-          }
-        });
-      });
+
+
+function actualizandoTablas(series: Serie[]): void {
+  console.log('Desplegando series');
+
+  for (let i in series) {
+    const serie = series[i];
+    let trElement = document.createElement("tr");
+    trElement.innerHTML = `<td>${serie.position}</td>
+                           <td><a href="#" class="serie-link" data-id="${serie.position}">${serie.name}</a></td>
+                           <td>${serie.channel}</td>
+                           <td>${serie.amountOfSeasons}</td>`;
+    seriesTbody.appendChild(trElement);
   }
 
-promedioDiv.innerHTML = `Seasons average: ${calcularPromedioTemporadas(series)}`;
+  document.querySelectorAll('.serie-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = Number((e.target as HTMLElement).getAttribute('data-id'));
+      let selectedSerie: Serie;
+      let verificando: boolean;
+      verificando = true;
 
+      for (let i = 0; i < series.length && verificando == true; i++) {
+        if (series[i].position === id) {
+          selectedSerie = series[i];
+          detalleCards(selectedSerie);
+          verificando = false;
+        }
+      }
+    });
+  });
+}
+
+promedioDiv.innerHTML = `Seasons average: ${calcularPromedioTemporadas(series)}`;
+const detalleContainer: HTMLElement = document.getElementById('detalles')!;
 
 function calcularPromedioTemporadas(series: Serie[]): number {
     for (let i = 0; i < series.length; i++) {
@@ -52,13 +53,22 @@ function calcularPromedioTemporadas(series: Serie[]): number {
     return promedioSeasons;
   }
 
-  function showSerieDetail(serie: Serie): void {
-    detalleContainer.innerHTML = `
-      <img class="card-img-top" src="${serie.linkImg}" alt="${serie.name}">
+  function detalleCards(serie: Serie): void {
+    const { linkImg, name, description, linkSerie } = serie;
+  
+    const imgElement = `<img class="card-img-top" src="${linkImg}" alt="${name}">`;
+    const titleElement = `<h5 class="card-title">${name}</h5>`;
+    const descriptionElement = `<p class="card-text">${description}</p>`;
+    const linkElement = `<a href="${linkSerie}" target="_blank" class="card-link">${linkSerie}</a>`;
+  
+    const cardBody = `
       <div class="card-body">
-        <h5 class="card-title">${serie.name}</h5>
-        <p class="card-text">${serie.description}</p>
-        <a href="${serie.linkSerie}" target="_blank" class="card-link">${serie.linkSerie}</a>
+        ${titleElement}
+        ${descriptionElement}
+        ${linkElement}
       </div>
     `;
+  
+    detalleContainer.innerHTML = imgElement + cardBody;
   }
+  
