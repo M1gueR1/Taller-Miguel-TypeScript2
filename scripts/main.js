@@ -44,5 +44,6 @@ function detalleCards(serie) {
     var descriptionElement = "<p class=\"card-text\">".concat(description, "</p>");
     var linkElement = "<a href=\"".concat(linkSerie, "\" target=\"_blank\" class=\"card-link\">").concat(linkSerie, "</a>");
     var cardBody = "\n      <div class=\"card-body\">\n        ".concat(titleElement, "\n        ").concat(descriptionElement, "\n        ").concat(linkElement, "\n      </div>\n    ");
-    detalleContainer.innerHTML = imgElement + cardBody;
+    var card = "\n      <div class=\"card\" style=\"width: 18rem;\">\n        ".concat(imgElement, "\n        ").concat(cardBody, "\n      </div>\n    ");
+    detalleContainer.innerHTML = card;
 }

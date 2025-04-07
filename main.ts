@@ -69,6 +69,14 @@ function calcularPromedioTemporadas(series: Serie[]): number {
       </div>
     `;
   
-    detalleContainer.innerHTML = imgElement + cardBody;
-  }
+    const card = `
+      <div class="card" style="width: 18rem;">
+        ${imgElement}
+        ${cardBody}
+      </div>
+    `;
+  
+    detalleContainer.innerHTML = card;
+}
+
   
